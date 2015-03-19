@@ -1,0 +1,78 @@
+[ {
+  "endpoint" : "http://localhost:8082/soap-responder?ws=RCPP",
+  "responseName" : "RCPP",
+  "status" : 200,
+  "contentType" : "application/xml",
+  "responseBody" : null,
+  "responseFileName" : "RCPP.xml"
+}, {
+  "endpoint" : "http://localhost:8082/soap-responder?ws=RAAE",
+  "responseName" : "RAAE",
+  "status" : 200,
+  "contentType" : "application/xml",
+  "responseBody" : null,
+  "responseFileName" : "RAAE.xml"
+}, {
+  "endpoint" : "http://localhost:8082/soap-responder?ws=RAAE22",
+  "responseName" : "RAAE22",
+  "status" : 200,
+  "contentType" : "application/xml",
+  "responseBody" : null,
+  "responseFileName" : "RAAE22.xml"
+}, {
+  "endpoint" : "http://localhost:8082/soap-responder?ws=RetrieveArrangementDetailsV001",
+  "responseName" : "RetrieveArrangementDetailsV001",
+  "status" : 200,
+  "contentType" : "application/xml",
+  "responseBody" : null,
+  "responseFileName" : "RetrieveArrangementDetailsV001.xml"
+}, {
+  "endpoint" : "http://localhost:8082/soap-responder?ws=RetrieveArrangementDetailsV002",
+  "responseName" : "RetrieveArrangementDetailsV002",
+  "status" : 200,
+  "contentType" : "application/xml",
+  "responseBody" : null,
+  "responseFileName" : "RetrieveArrangementDetailsV002.xml"
+}, {
+  "endpoint" : "http://localhost:8082/soap-responder?ws=RetrieveArrangementDetailsV003",
+  "responseName" : "RetrieveArrangementDetailsV003",
+  "status" : 200,
+  "contentType" : "application/xml",
+  "responseBody" : null,
+  "responseFileName" : "RetrieveArrangementDetailsV003.xml"
+}, {
+  "endpoint" : "http://localhost:8082/soap-responder?ws=RetrieveArrangementDetailsV004",
+  "responseName" : "RetrieveArrangementDetailsV004",
+  "status" : 200,
+  "contentType" : "application/xml",
+  "responseBody" : null,
+  "responseFileName" : "RetrieveArrangementDetailsV004.xml"
+}, {
+  "endpoint" : "http://localhost:8082/soap-responder?ws=RetrieveArrangementDetailsV005",
+  "responseName" : "RetrieveArrangementDetailsV005",
+  "status" : 200,
+  "contentType" : "application/xml",
+  "responseBody" : null,
+  "responseFileName" : "RetrieveArrangementDetailsV005.xml"
+}, {
+  "endpoint" : "http://localhost:8082/soap-responder?ws=RetrieveArrangementDetailsV006",
+  "responseName" : "RetrieveArrangementDetailsV006",
+  "status" : 200,
+  "contentType" : "application/xml",
+  "responseBody" : null,
+  "responseFileName" : "RetrieveArrangementDetailsV006.xml"
+}, {
+  "endpoint" : "http://localhost:8082/soap-responder?ws=RetrieveArrangementDetailsV007",
+  "responseName" : "RetrieveArrangementDetailsV007",
+  "status" : 200,
+  "contentType" : "application/xml",
+  "responseBody" : null,
+  "responseFileName" : "RetrieveArrangementDetailsV007.xml"
+}, {
+  "endpoint" : "http://localhost:8082/service-responder?ws=billpaydetails.json",
+  "responseName" : "billpaydetails.json",
+  "status" : 200,
+  "contentType" : "application/json",
+  "responseBody" : null,
+  "responseFileName" : "billpaydetails.json.json"
+} ]
