@@ -13,6 +13,8 @@ public class ResponderVO {
 	private String responseBody;
 	
 	private String responseFileName;
+	
+	private String serviceType;
 
 	public String getEndpoint() {
 		return endpoint;
@@ -60,6 +62,14 @@ public class ResponderVO {
 
 	public void setResponseFileName(String responseFileName) {
 		this.responseFileName = responseFileName;
+	}
+
+	public String getServiceType() {
+		return serviceType;
+	}
+
+	public void setServiceType(String serviceType) {
+		this.serviceType = serviceType;
 	}
 
 		
