@@ -69,7 +69,7 @@ public class ResponderUtil {
 		}
 	}
 	
-	public static String getFormattedJson(String jsonInput) {
+	public static String getFormattedJson(String jsonInput) throws Exception{
 		
 		ObjectMapper mapper = new ObjectMapper();
 		String indented = null;
@@ -77,8 +77,7 @@ public class ResponderUtil {
 			Object json = mapper.readValue(jsonInput, Object.class);
 			indented = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new Exception("Error in formatting json:",e);
 		}
 		
 		return indented;

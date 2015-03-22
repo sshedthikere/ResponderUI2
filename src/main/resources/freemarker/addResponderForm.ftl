@@ -12,8 +12,7 @@
 	<div class="alert alert-success" role="alert">
         <strong>${message!''}</strong>
     </div>
-    </#if>
-     <br/> 
+    </#if>     
 	<form data-toggle="validator" class="form-horizontal" role="form" action="submit-response" method="post">
 		  <div class="form-group">
 		    <label class="col-sm-2 control-label" for="focusedInput1">EndPoint:</label>

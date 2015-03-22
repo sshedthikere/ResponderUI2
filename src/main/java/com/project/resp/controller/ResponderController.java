@@ -247,9 +247,22 @@ public class ResponderController {
             protected void doHandle(Request request, Response response, Writer writer) throws IOException, TemplateException {            
                                     
             	 String jsonInput = request.queryParams("jsonResponseBody"); 
-            	 String jsonOutput = ResponderUtil.getFormattedJson(jsonInput);
+            	 String jsonOutput = "";
+            	 boolean errorFlag = false;
             	 SimpleHash root = new SimpleHash();
-            	 root.put("jsonResponseBody", jsonOutput);
+				try {
+					jsonOutput = ResponderUtil.getFormattedJson(jsonInput);
+				} catch (Exception e) {
+					errorFlag = true;
+					System.out.println(e.getMessage());
+				}
+            	if (errorFlag) {
+            		root.put("formatErrorMessage", "Unable to Format Json.Not a valid JSON");
+            		root.put("jsonResponseBody", jsonInput);
+            	} else {
+            		root.put("jsonResponseBody", jsonOutput);
+            	}
+            	 
                  template.process(root, writer);                
             }
         });

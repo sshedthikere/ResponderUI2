@@ -11,6 +11,11 @@
         <strong>${message!''}</strong>
     </div>
     </#if>
+    <#if formatErrorMessage??>
+	<div class="alert alert-danger" role="alert">
+        <strong>${formatErrorMessage!''}</strong>
+    </div>
+    </#if>
      <br/> 
 	<form class="form-horizontal" role="form" action="format-json" method="post">		  	  
 		   <style type="text/css">        
