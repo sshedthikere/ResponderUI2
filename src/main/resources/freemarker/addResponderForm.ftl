@@ -6,6 +6,7 @@
   <body>
     <div class="container">
       	<#include "navigation.ftl">
+      	<#include "tabs.ftl">
     <br/>
     <#if message??>
 	<div class="alert alert-success" role="alert">
@@ -41,7 +42,7 @@
 		     <div class="col-sm-10">
 			      <select class="form-control" id="contentTypeSelect" name="contentType">
 			        <option selected>application/json</option>
-			        <option>application/xml</option>
+			        <option>text/xml</option>
 			      </select>
 		      </div>
 		     <#else> 
@@ -60,17 +61,46 @@
 		  <div class="form-group">
  			 <label class="col-sm-2 control-label" >Response Body:*</label>
  		 	<div class="col-sm-10">
- 		 		<textarea class="form-control" rows="10" name="responseBody" required>${responseBody!''}</textarea>
- 		 	 </div>		  
+ 		 		<textarea class="form-control" rows="10" id="responseBodytextarea" name="responseBody" required>${responseBody!''}</textarea>
+ 		 		<div  id="counter"></div>
+ 		 	 </div>
+ 		 	 		  
 		  </div>
 		  
 		  <div class="form-group">
       		<div class="col-sm-offset-2 col-sm-10">
-         		<button type="submit" class="btn btn-info" role="button">Submit</button>
+         		<button type="submit" class="btn btn-info" role="button" id="submitButton">Submit</button>
       		</div>
    		</div>
 	</form>
     </div> <!-- /container -->
-    	
+    
+ <script>
+ $(document).ready(function()  {
+    var characters = 800000;
+    var totalLength = 0;
+    
+    $("#counter").append("You have <strong>"+  characters+"</strong> characters remaining");
+    $("#responseBodytextarea").keyup(function(){
+        if($(this).val().length > characters){
+           //$(this).val($(this).val().substr(0, characters));
+            $("#submitButton").attr('disabled','disabled');
+        } else {        	
+        	$("#submitButton").removeAttr('disabled');
+        }
+    totalLength = $(this).val().length
+    var remaining = characters -  totalLength;
+    $("#counter").html("Total characters entered:<strong>"+totalLength+ "</strong>"+ " remaining characters:<strong>"+remaining+"</strong>");
+    if(remaining <= 10)
+    {
+        $("#counter").css("color","red");
+    }
+    else
+    {
+        $("#counter").css("color","black");
+    }
+    });
+});
+</script>
 </body>
 </html>

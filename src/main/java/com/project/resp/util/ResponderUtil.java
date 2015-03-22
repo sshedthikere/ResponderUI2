@@ -69,6 +69,21 @@ public class ResponderUtil {
 		}
 	}
 	
+	public static String getFormattedJson(String jsonInput) {
+		
+		ObjectMapper mapper = new ObjectMapper();
+		String indented = null;
+		try {
+			Object json = mapper.readValue(jsonInput, Object.class);
+			indented = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return indented;
+	}
+	
 	public static String getFilePath(String basedir, String filename, String fileExtn) {
 		
 		StringBuffer buffer = new StringBuffer();

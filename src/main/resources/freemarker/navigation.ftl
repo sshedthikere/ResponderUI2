@@ -34,13 +34,13 @@
    </div>
    <div>
       <ul class="nav navbar-nav">
-         <li class="active"><a href="dashbaord">HOME</a></li>
-         <li><a href="#">Utils</a></li>
-      </ul>
+         <li id="homeNav"><a href="dashboard">HOME</a></li>        
+         <li id="utilsNav"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Utils<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="json-formatter-form">Format JSON</a></li>
+            <li><a href="#">Update Responder Config</a></li>            
+          </ul>
+        </li>
+      </ul>      
    </div>
-</nav>
-		
-<ul class="nav nav-tabs" id="wsTabs">
-	<li class="${soaptabactive!''}"><a href="dashboard">SOAP</a></li>
-	<li class="${resttabactive!''}"><a href="restdashboard">REST</a></li>		
-</ul>
+</nav>	
