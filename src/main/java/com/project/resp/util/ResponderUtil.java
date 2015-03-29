@@ -2,11 +2,13 @@ package com.project.resp.util;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig.Feature;
 
@@ -24,37 +26,25 @@ public class ResponderUtil {
 	
 	public static final String RESPONSES_CONFIG = "/config";
 	
-	private static final String FILE_EXTN_JSON = ".json";
-	
-	private static final String FILE_EXTN_XML = ".xml";
-	
 	private static final String RESPONDER_CONFIG_FILE_NAME = "responderconfig.json";
 	
 	private static final String RESPONDER_DATA_DIR = "/wsdata";
 	
-	public static String getDefaultContentType(String wsType) {
-		
-		if (SOAP.equalsIgnoreCase(wsType)) {			
-			return "application/xml";
-		} else {
-			return "application/json";
-		}
-		
-	}
+	private final static Logger LOGGER = Logger.getLogger(ResponderUtil.class);
 	
-	public static String getEndPointURL(String responderName, String host) {
-		
-		return "http://"+host+ENDPOINT_URI + responderName;
-	}
+	private final static String ENDPOINT_URL = "http://%1$s/service-responder?ws=%2$s";
 	
+	
+	public static String getEndpointURL(Request request, String responseName) {
+		String formattedURL = String.format(ENDPOINT_URL, request.host(),responseName);
+		LOGGER.info("formattedURL="+formattedURL);
+		return formattedURL;
+	}
 	
 	public static void objectToJson(Object obj, String basedir) {
-				
-		
 		ObjectMapper mapper = new ObjectMapper();
-		
 		try {
-			basedir = basedir.replaceFirst("file:/", "") + RESPONSES_CONFIG;			
+			basedir = basedir + RESPONSES_CONFIG;			
 			createDirectory(basedir);
 			File responseFile = new File (getFilePath(basedir,RESPONDER_CONFIG_FILE_NAME,null));
 			PrintWriter writer = new PrintWriter(responseFile);
@@ -65,7 +55,7 @@ public class ResponderUtil {
 			writer.close();
 			
 		} catch (IOException e) {			
-			e.printStackTrace();
+			LOGGER.error(e);
 		}
 	}
 	
@@ -77,9 +67,9 @@ public class ResponderUtil {
 			Object json = mapper.readValue(jsonInput, Object.class);
 			indented = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
 		} catch (IOException e) {
+			LOGGER.error("Error while formatting json",e);
 			throw new Exception("Error in formatting json:",e);
 		}
-		
 		return indented;
 	}
 	
@@ -88,7 +78,6 @@ public class ResponderUtil {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append(basedir).append(File.separator).append(filename).append(null!=fileExtn?fileExtn:"");
 		return buffer.toString();
-		
 	}
 	
 	public static Object jsonToObject(String basedir) {
@@ -96,15 +85,15 @@ public class ResponderUtil {
 		ObjectMapper mapper = new ObjectMapper();
 		Object returnObj = null;
 		try {
-			String filePath = basedir.replaceFirst("file:/", "") + RESPONSES_CONFIG;
+			String filePath = basedir + RESPONSES_CONFIG;
 			File configFile = new File(filePath + "/"+ RESPONDER_CONFIG_FILE_NAME);
-			System.out.println("ConfigFile="+configFile);
+			LOGGER.info("ConfigFile="+configFile);
 			
 			if (configFile.exists()) {
 				returnObj =  mapper.readValue(configFile, mapper.getTypeFactory().constructCollectionType(List.class, ResponderVO.class));
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error(e);
 		}
 		
 		return returnObj;
@@ -112,34 +101,60 @@ public class ResponderUtil {
 	
 	
 	public static void saveResponse(String responseStr, String basedir, String fileName) {
-		
 		try {
-			
-			String filePath = basedir.replaceFirst("file:/", "") + RESPONDER_DATA_DIR+"/"+fileName;
+			String filePath = basedir + RESPONDER_DATA_DIR+"/"+fileName;
 			FileUtils.writeStringToFile(new File(filePath), responseStr);
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error(e);
 		}
 	}
 	
 	public static String getResponseData(String basedir, String fileName) {
 		
-		String filePath = basedir.replaceFirst("file:/", "") + RESPONDER_DATA_DIR+"/"+fileName;
+		String filePath = basedir + RESPONDER_DATA_DIR+"/"+fileName;
 		String responseStr = null;
 		try {
 			responseStr = FileUtils.readFileToString(new File(filePath));
 		} catch (IOException e) {			
-			e.printStackTrace();
+			LOGGER.error(e);
 		}
 		return responseStr;
 	}
 	
-	private static void createDirectory(String dirpath) {		
+	public static List<String> getFileNamesList(String basedir) {
 		
-		File file = new File(dirpath);
-		
+		String[] extensions = {"xml", "json"};
+		LOGGER.info("basedir="+basedir);
+		@SuppressWarnings("unchecked")
+		List<File> files = (List<File>) FileUtils.listFiles(new File(basedir+RESPONDER_DATA_DIR), extensions, false);
+		List<String> filenames = filesToFilenames(files);		
+		return filenames;
+	}
+	
+	@SuppressWarnings("rawtypes")
+	private static List<String> filesToFilenames(List<File> files) {
+        List<String> filenames = new ArrayList<String>(files.size());
+        Iterator i = files.iterator();
+        while (i.hasNext()) {
+            filenames.add(((File)i.next()).getName());
+        }
+        return filenames;
+    }
+	
+	private static void createDirectory(String dirpath) {
+		File file = new File(dirpath);		
 		if (!file.exists()) {
 			file.mkdir(); 
 		}		
+	}
+	
+	public static String getResponseName(String responseFileName, String contentType) {
+		String responseName = "";
+		if ("text/xml".equalsIgnoreCase(contentType)) {
+			responseName = responseFileName.substring(0,responseFileName.lastIndexOf(".xml"));
+		} else if ("application/json".equalsIgnoreCase(contentType)) {
+			responseName = responseFileName.substring(0,responseFileName.lastIndexOf(".json"));
+		}
+		return responseName;
 	}
 }

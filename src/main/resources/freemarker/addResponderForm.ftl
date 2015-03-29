@@ -77,18 +77,17 @@
  <script>
  $(document).ready(function()  {
     var characters = 800000;
-    var totalLength = 0;
-    
-    $("#counter").append("You have <strong>"+  characters+"</strong> characters remaining");
+    var totalLength = $("#responseBodytextarea").val().length;
+    var remaining = characters -  totalLength;    
+    $("#counter").html("Total characters entered:<strong>"+totalLength+ "</strong>"+ " remaining characters:<strong>"+remaining+"</strong>");
     $("#responseBodytextarea").keyup(function(){
-        if($(this).val().length > characters){
-           //$(this).val($(this).val().substr(0, characters));
+        if($(this).val().length > characters){           
             $("#submitButton").attr('disabled','disabled');
         } else {        	
         	$("#submitButton").removeAttr('disabled');
         }
-    totalLength = $(this).val().length
-    var remaining = characters -  totalLength;
+    totalLength = $(this).val().length;
+    remaining = characters -  totalLength;
     $("#counter").html("Total characters entered:<strong>"+totalLength+ "</strong>"+ " remaining characters:<strong>"+remaining+"</strong>");
     if(remaining <= 10)
     {

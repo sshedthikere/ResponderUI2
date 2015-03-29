@@ -37,14 +37,13 @@
                 <td class="rpname">${responderVO['responseName']}</td>
                 <td>${responderVO['contentType']}</td>
                 <td>${responderVO['endpoint']}</td>
-                <td><a href="#" class="btn btn-info btn-sm" title="Edit responder"><strong>E</strong></a>
+                <td><a href="edit-responder-form?responderkey=${responderVO['responseName']}" class="btn btn-info btn-sm" title="Edit responder"><strong>E</strong></a>
                 <a id="deleteLink" data-toggle="modal" href="#deleteModal" class="btn btn-info btn-sm" title="Delete responder"><strong>D</strong></a>                
                 </td>
               </tr>
        		</#list>
             </tbody>
-          </table>
-          <br/>
+          </table>          
           <a href="${addResponderURL!''}" class="btn btn-info" role="button">Create</a>        
       </div>     
     </div> <!-- /container -->
@@ -52,12 +51,12 @@
 	<script>
 	$(document).ready(function () {
 	$("#homeNav").addClass('active');	        
-	$("#deleteLink").click(function() {
-   	 var $item = $(this).closest("tr").find(".rpname").text(); 
+	$(".btn-sm").click(function() {
+   	 var $item = $(this).closest("tr").find(".rpname").text();   	 
      $("#deleteModalLink").attr("href", "delete-responder?ws="+$item);
      $("#deleteModalLabel").text("Delete Responder:"+$item);       
-});
 	});
+});
 	</script>
 
 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

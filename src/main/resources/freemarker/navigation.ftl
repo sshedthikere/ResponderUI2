@@ -30,7 +30,7 @@
 
 <nav class="navbar navbar-default" role="navigation">
    <div class="navbar-header">
-      <a class="navbar-brand" href="dashboard">SOAP/REST Responder</a>
+      <a class="navbar-brand" href="dashboard">Spark Responder</a>
    </div>
    <div>
       <ul class="nav navbar-nav">
@@ -38,7 +38,7 @@
          <li id="utilsNav"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Utils<span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li><a href="json-formatter-form">Format JSON</a></li>
-            <li><a href="#">Update Responder Config</a></li>            
+            <li><a href="responder-config-settings">Sync Responder Config</a></li>            
           </ul>
         </li>
       </ul>      
