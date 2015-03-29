@@ -5,7 +5,7 @@
   </head>  
   <body>
     <div class="container">
-     <#include "navigation.ftl">
+     <#include "navigation.ftl">     
      <#include "tabs.ftl">
 	<br/>
 	<#if message??>
@@ -18,7 +18,7 @@
         <strong>${errorMsg!''}</strong>
     </div>
     </#if>
-	<a href="${addResponderURL!''}" class="btn btn-info" role="button">Create</a>
+	<a href="${addResponderURL!''}" class="btn btn-info" role="button" title="create new responder">Create</a>
 	<br/>	       
     <table class="table table-striped">
             <thead>
@@ -44,7 +44,7 @@
        		</#list>
             </tbody>
           </table>          
-          <a href="${addResponderURL!''}" class="btn btn-info" role="button">Create</a>        
+          <a href="${addResponderURL!''}" class="btn btn-info" role="button" title="create new responder">Create</a>        
       </div>     
     </div> <!-- /container -->
      

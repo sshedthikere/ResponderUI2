@@ -25,6 +25,7 @@ import spark.Response;
 import spark.Route;
 import spark.Spark;
 
+import com.project.resp.constants.WebConstants;
 import com.project.resp.util.ResponderUtil;
 import com.project.resp.vo.ResponderVO;
 
@@ -34,10 +35,8 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
 /**
- * This class encapsulates the controllers for the blog web application.  It delegates all interaction with MongoDB
- * to three Data Access Objects (DAOs).
- * <p/>
- * It is also the entry point into the web application.
+ * This class encapsulates the controllers for the spark responder web application. 
+ * 
  */
 public class ResponderController {
 	
@@ -47,11 +46,7 @@ public class ResponderController {
     
     private List<ResponderVO> responderVOs;
     
-    private static final String TEXT_XML = "text/xml";
     
-    private static final String APPLICATION_JSON = "application/json";
-    
-    private static final String ADD_RESPONDER_FORM_URL = "/add-responder-form";
     
     private final static Logger LOGGER = Logger.getLogger(ResponderController.class); 
     
@@ -77,7 +72,7 @@ public class ResponderController {
     	cfg = createFreemarkerConfiguration();
         setPort(8082);
         responderVOs = new ArrayList<ResponderVO>();
-        getResponderVOList();
+        loadResponderVOList();
         Spark.staticFileLocation("/public");
         initializeRoutes();
        
@@ -89,7 +84,7 @@ public class ResponderController {
         /**
          * Constructor
          *
-         * @param path The route path which is used for matching. (e.g. /hello, users/:name)
+         * @param path The route path which is used for matching.
          */
         protected FreemarkerBasedRoute(final String path, final String templateName) throws IOException {
             super(path);
@@ -113,10 +108,13 @@ public class ResponderController {
                 throws IOException, TemplateException;
 
     }
-
-    private void initializeRoutes() throws IOException {
-        
-       // used to display actual blog post detail page
+    
+    /**
+     * 
+     * @throws IOException
+     */
+    private void initializeRoutes() throws IOException {        
+       
         get(new FreemarkerBasedRoute("/dashboard", "responder_dashboard.ftl") {
             @Override
             protected void doHandle(Request request, Response response, Writer writer) throws IOException, TemplateException {
@@ -133,14 +131,14 @@ public class ResponderController {
                     SimpleHash root = new SimpleHash();  
                     List<ResponderVO> restResponderVOs = filterResponders("rest");
                     root.put("responderVOs", restResponderVOs);
-                    root.put("addResponderURL", ADD_RESPONDER_FORM_URL+"?type=rest");
-                    root.put("resttabactive", "active");
+                    root.put("addResponderURL", WebConstants.ADD_RESPONDER_FORM_URL+"?type=rest");
+                    setActiveTab(root, "rest");
                     template.process(root, writer);
             }
         });
 
        
-        get(new FreemarkerBasedRoute(ADD_RESPONDER_FORM_URL, "addResponderForm.ftl") {
+        get(new FreemarkerBasedRoute(WebConstants.ADD_RESPONDER_FORM_URL, "addResponderForm.ftl") {
             @Override
             protected void doHandle(Request request, Response response, Writer writer) throws IOException, TemplateException {
               
@@ -150,9 +148,9 @@ public class ResponderController {
                 responderVO.setServiceType(responseType);
                 setActiveTab(root,responseType);
                 if ("soap".equalsIgnoreCase(responseType)) {
-                	responderVO.setContentType(TEXT_XML);                	
+                	responderVO.setContentType(WebConstants.TEXT_XML);                	
                 } else {
-                	responderVO.setContentType(APPLICATION_JSON);                	
+                	responderVO.setContentType(WebConstants.APPLICATION_JSON);                	
                 }
                 root.put("responderVO", responderVO); 
                 template.process(root, writer);
@@ -160,13 +158,13 @@ public class ResponderController {
             }
         });
         
-        get(new FreemarkerBasedRoute("edit-responder-form", "addResponderForm.ftl") {
+        get(new FreemarkerBasedRoute("/edit-responder-form", "addResponderForm.ftl") {
             @Override
             protected void doHandle(Request request, Response response, Writer writer) throws IOException, TemplateException {
               
             	String responseName = request.queryParams("responderkey");
             	if (null == responseName) {
-            		response.redirect(ADD_RESPONDER_FORM_URL);
+            		response.redirect(WebConstants.ADD_RESPONDER_FORM_URL);
             	} else {
 	            	int matchedIndex = getMatchedResponderIndex(responderVOs, responseName);
 	            	SimpleHash root = new SimpleHash();
@@ -197,7 +195,7 @@ public class ResponderController {
                 responderVO.setStatus(Integer.parseInt(status));
                 responderVO.setResponseName(responseName);
                 responderVO.setServiceType(serviceType);
-                if (TEXT_XML.equalsIgnoreCase(contentType)) {
+                if (WebConstants.TEXT_XML.equalsIgnoreCase(contentType)) {
                 	responderVO.setResponseFileName(responseName+ ".xml");
                 } else {
                 	responderVO.setResponseFileName(responseName+ ".json");
@@ -212,7 +210,7 @@ public class ResponderController {
                 }
                 
                 ResponderUtil.objectToJson(responderVOs, BASE_DIR);
-                getResponderVOList();
+                loadResponderVOList();
                 ResponderUtil.saveResponse(responseBody, BASE_DIR, responderVO.getResponseFileName());                
                
                SimpleHash root = new SimpleHash();                
@@ -255,7 +253,7 @@ public class ResponderController {
 	            	}
 	            	responderVOs.addAll(outOfSyncResponderVOs);
 	            	ResponderUtil.objectToJson(responderVOs, BASE_DIR);
-	                getResponderVOList();
+	                loadResponderVOList();
             	}
             	response.redirect("/responder-setting-form");
             	return null;
@@ -338,7 +336,7 @@ public class ResponderController {
             	LOGGER.info(responseName);
             	if (deleteResponder(responderVOs, responseName)) {
             		ResponderUtil.objectToJson(responderVOs, BASE_DIR);
-                    getResponderVOList();                	
+                    loadResponderVOList();                	
                 	root.put("message", "Deleted " +responseName+" response successfully. Only config file entry is deleted.");
             	} else {
             		root.put("errorMsg", "Unable to delete responder");
@@ -351,7 +349,7 @@ public class ResponderController {
    
     
     @SuppressWarnings("unchecked")
-	private List<ResponderVO> getResponderVOList() {
+	private List<ResponderVO> loadResponderVOList() {
     	
     	if (null == responderVOs || responderVOs.isEmpty()) {
 	    	Object responderVOListObject = ResponderUtil.jsonToObject(BASE_DIR);
@@ -377,8 +375,7 @@ public class ResponderController {
     
     private int getMatchedResponderIndex(List<ResponderVO> responderVOs, String responderName) {    	
     	int index = -1;    	
-    	for (int i = 0;i <responderVOs.size();i++) {   		
-    		
+    	for (int i = 0;i <responderVOs.size();i++) {
     		if (responderVOs.get(i).getResponseName().equalsIgnoreCase(responderName)) {            			
     			index = i;
     			break;
@@ -388,7 +385,6 @@ public class ResponderController {
     }
     
     private boolean deleteResponder(List<ResponderVO> responderVOs, String responderName) {
-    	
 		int index = getMatchedResponderIndex(responderVOs, responderName);
 		if (index != -1) {
 			responderVOs.remove(index);
@@ -399,11 +395,10 @@ public class ResponderController {
     }
     
     private void setActiveTab(SimpleHash simpleHash, String type) {
-    	
     	if ("soap".equalsIgnoreCase(type)) {
-    		simpleHash.put("soaptabactive", "active");
+    		simpleHash.put("active_tab_soap", "active");
     	} else {
-    		simpleHash.put("resttabactive", "active");
+    		simpleHash.put("active_tab_rest", "active");
     	}
     }
     
@@ -433,8 +428,8 @@ public class ResponderController {
 	private void updateDashboardInfo(SimpleHash root) {
 		List<ResponderVO> soapResponderVOs = filterResponders("soap");
 		root.put("responderVOs", soapResponderVOs);
-		root.put("addResponderURL", ADD_RESPONDER_FORM_URL+"?type=soap");
-		root.put("soaptabactive", "active");
+		root.put("addResponderURL", WebConstants.ADD_RESPONDER_FORM_URL+"?type=soap");
+		setActiveTab(root, "soap");
 	}
 
 	private List<ResponderVO> getResponderSettingVOList() {
@@ -456,9 +451,9 @@ public class ResponderController {
 				newResponderVO.setResponseFileName(filename);				
 				newResponderVO.setServiceType((filename.contains(".xml")?"soap":"rest"));
 				if (filename.contains(".xml")) {
-					newResponderVO.setContentType(TEXT_XML);                			
+					newResponderVO.setContentType(WebConstants.TEXT_XML);                			
 				} else if (filename.contains(".json")){
-					newResponderVO.setContentType(APPLICATION_JSON);
+					newResponderVO.setContentType(WebConstants.APPLICATION_JSON);
 				} else {
 					newResponderVO.setContentType("UNKNOWN");
 				}

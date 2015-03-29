@@ -5,7 +5,7 @@
   </head>
   <body>
     <div class="container">
-      	<#include "navigation.ftl">
+      	<#include "navigation.ftl">      	
       	<#include "tabs.ftl">
     <br/>
     <#if message??>

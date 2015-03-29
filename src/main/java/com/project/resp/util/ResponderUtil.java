@@ -14,29 +14,15 @@ import org.codehaus.jackson.map.SerializationConfig.Feature;
 
 import spark.Request;
 
+import com.project.resp.constants.WebConstants;
 import com.project.resp.vo.ResponderVO;
 
 public class ResponderUtil {
 	
-	public static final String SOAP = "SOAP";
-	
-	public static final String REST = "REST";	
-	
-	public static final String ENDPOINT_URI = "/soap-responder?ws=";
-	
-	public static final String RESPONSES_CONFIG = "/config";
-	
-	private static final String RESPONDER_CONFIG_FILE_NAME = "responderconfig.json";
-	
-	private static final String RESPONDER_DATA_DIR = "/wsdata";
-	
 	private final static Logger LOGGER = Logger.getLogger(ResponderUtil.class);
 	
-	private final static String ENDPOINT_URL = "http://%1$s/service-responder?ws=%2$s";
-	
-	
 	public static String getEndpointURL(Request request, String responseName) {
-		String formattedURL = String.format(ENDPOINT_URL, request.host(),responseName);
+		String formattedURL = String.format(WebConstants.ENDPOINT_URL, request.host(),responseName);
 		LOGGER.info("formattedURL="+formattedURL);
 		return formattedURL;
 	}
@@ -44,9 +30,9 @@ public class ResponderUtil {
 	public static void objectToJson(Object obj, String basedir) {
 		ObjectMapper mapper = new ObjectMapper();
 		try {
-			basedir = basedir + RESPONSES_CONFIG;			
+			basedir = basedir + WebConstants.RESPONSES_CONFIG;			
 			createDirectory(basedir);
-			File responseFile = new File (getFilePath(basedir,RESPONDER_CONFIG_FILE_NAME,null));
+			File responseFile = new File (getFilePath(basedir,WebConstants.RESPONDER_CONFIG_FILE_NAME,null));
 			PrintWriter writer = new PrintWriter(responseFile);
 			mapper.configure(Feature.INDENT_OUTPUT,true);
 			writer.write(mapper.writeValueAsString(obj));
@@ -85,8 +71,8 @@ public class ResponderUtil {
 		ObjectMapper mapper = new ObjectMapper();
 		Object returnObj = null;
 		try {
-			String filePath = basedir + RESPONSES_CONFIG;
-			File configFile = new File(filePath + "/"+ RESPONDER_CONFIG_FILE_NAME);
+			String filePath = basedir + WebConstants.RESPONSES_CONFIG;
+			File configFile = new File(filePath + "/"+ WebConstants.RESPONDER_CONFIG_FILE_NAME);
 			LOGGER.info("ConfigFile="+configFile);
 			
 			if (configFile.exists()) {
@@ -102,7 +88,7 @@ public class ResponderUtil {
 	
 	public static void saveResponse(String responseStr, String basedir, String fileName) {
 		try {
-			String filePath = basedir + RESPONDER_DATA_DIR+"/"+fileName;
+			String filePath = basedir + WebConstants.RESPONDER_DATA_DIR+"/"+fileName;
 			FileUtils.writeStringToFile(new File(filePath), responseStr);
 		} catch (IOException e) {
 			LOGGER.error(e);
@@ -111,7 +97,7 @@ public class ResponderUtil {
 	
 	public static String getResponseData(String basedir, String fileName) {
 		
-		String filePath = basedir + RESPONDER_DATA_DIR+"/"+fileName;
+		String filePath = basedir + WebConstants.RESPONDER_DATA_DIR+"/"+fileName;
 		String responseStr = null;
 		try {
 			responseStr = FileUtils.readFileToString(new File(filePath));
@@ -123,10 +109,9 @@ public class ResponderUtil {
 	
 	public static List<String> getFileNamesList(String basedir) {
 		
-		String[] extensions = {"xml", "json"};
-		LOGGER.info("basedir="+basedir);
+		String[] extensions = {"xml", "json"};		
 		@SuppressWarnings("unchecked")
-		List<File> files = (List<File>) FileUtils.listFiles(new File(basedir+RESPONDER_DATA_DIR), extensions, false);
+		List<File> files = (List<File>) FileUtils.listFiles(new File(basedir+WebConstants.RESPONDER_DATA_DIR), extensions, false);
 		List<String> filenames = filesToFilenames(files);		
 		return filenames;
 	}
