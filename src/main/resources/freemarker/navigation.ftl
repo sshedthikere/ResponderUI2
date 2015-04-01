@@ -41,6 +41,7 @@
             <li><a href="responder-config-settings">Sync Responder Config</a></li>            
           </ul>
         </li>
+        <li id="helpNav"><a href="responder-help">Help</a></li>
       </ul>      
    </div>
 </nav>	

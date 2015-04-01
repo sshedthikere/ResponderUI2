@@ -255,7 +255,7 @@ public class ResponderController {
 	            	ResponderUtil.objectToJson(responderVOs, BASE_DIR);
 	                loadResponderVOList();
             	}
-            	response.redirect("/responder-setting-form");
+            	response.redirect("/responder-config-settings");
             	return null;
             } 
         });
@@ -342,6 +342,15 @@ public class ResponderController {
             		root.put("errorMsg", "Unable to delete responder");
             	}
             	updateDashboardInfo(root);
+                template.process(root, writer);
+            }
+        });
+        
+        get(new FreemarkerBasedRoute("/responder-help", "responder-help.ftl") {
+            @Override
+            protected void doHandle(Request request, Response response, Writer writer) throws IOException, TemplateException {
+            	
+            	SimpleHash root = new SimpleHash();            	
                 template.process(root, writer);
             }
         });
