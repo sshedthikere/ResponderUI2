@@ -33,6 +33,7 @@ import freemarker.template.Configuration;
 import freemarker.template.SimpleHash;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import freemarker.template.utility.StringUtil;
 
 /**
  * This class encapsulates the controllers for the spark responder web application. 
@@ -45,6 +46,8 @@ public class ResponderController {
     private final String BASE_DIR;
     
     private List<ResponderVO> responderVOs;
+    
+    private static final int DEFAULT_PORT = 8082;
     
     
     
@@ -68,9 +71,16 @@ public class ResponderController {
     public ResponderController() throws IOException {        
     	
     	String basedir = System.getProperty("build.dir");
+    	
     	BASE_DIR = basedir.replaceFirst("file:/", "");
     	cfg = createFreemarkerConfiguration();
-        setPort(8082);
+        String port = System.getProperty("server.port");
+        
+        if (null != port && port.length() > 0) {
+        	setPort(Integer.parseInt(port));
+        } else {
+        	setPort(DEFAULT_PORT);
+        }
         responderVOs = new ArrayList<ResponderVO>();
         loadResponderVOList();
         Spark.staticFileLocation("/public");

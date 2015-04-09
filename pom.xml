@@ -75,6 +75,10 @@
 							<key>build.dir</key>
 							<value>${project.baseUri}</value>
 						</systemProperty>
+						<systemProperty>
+							<key>server.port</key>
+							<value>8082</value>
+						</systemProperty>
 					</systemProperties>
 				</configuration>
 			</plugin>
