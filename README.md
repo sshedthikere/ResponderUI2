@@ -15,5 +15,15 @@ content type, endpoint url. SOAP and REST responder configurations are listed un
 Spark responder dashbaord is accessible using the url http://localhost:8082/dashboard. 
 Default port 8082 can be configured to any other port in case of any port conflict.
 
+<h3> Auto Discover services</h3>
+We can use the sync feature under Utils menu to discover all the responses available in root directory (under wsdata folder).
+Responses which are auto discovered is available for consuming either as SOAP or REST Services. Endpoint urls are generated using the name of the response file.
+
+<h3> Steps to run</h3>
+1. Unzip the zipped artifact(make sure there are no spaces in the folder name)
+2. Locate the pom.xml. Run "mvn clean install" so that it downloads all the dependency jars to your local repo (required only for the first time)
+3. Run the command given in run.txt (mvn exec command)
+4. Launch the application using URL: http://localhost:8082/dashboard
+
 
 
